@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let imgList = [
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621371844204348e9036f4f.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621405025473fc0cd5085c3.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16462140676250a726acea160f.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621404532451913cb9467cd.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16462012654593851ad954189e.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16461873870977ae78e4f61c8e.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems1646115568687e3f778a063086.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems1646112490153a6dbfef0dbfcb.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164611248100513a6f4bd8fdd6.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164611244783572bca12014bad.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems15693187904139af872cce7754.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems15693187904139af872cce7754.png',
+            "https://j1.58cdn.com.cn/jinrong/images/ems1537957099572acb7eca96b87b.jpg",
+            "https://j1.58cdn.com.cn/jinrong/images/ems1569242409275ad77f5c0e4f23.png",
+            "https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png"
+        ]
+
+        // 预加载
+        function preLoad(imgList, cb) {
+            imgList.forEach(url => {
+                let image = new Image()  //创建一个Image对象，实现图片的预下载 
+                imgage.onload = () => {
+                    // img.onload引用的匿名函数形成了闭包，闭包的作用域链中保存着img，创建了循环引用
+                    // 所以 图片下载完毕时将img.onload设为null，并异步调用callback函数。
+                    imgage.onload = null  
+                    console.log('图片加载完成')
+                    cb()
+                }
+                image.src = url
+            })
+        }
+    </script>
+
+</body>
+
+</html>

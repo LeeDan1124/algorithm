@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="./hashRouter.js"></script>
+<body>
+    <div onclick="back()">回退</div>
+    <div onclick="go()">前进</div>
+</body>
+<script>
+    function changeColor(color) {
+        document.body.style.background = color
+    }
+    let hashRouter = new HashRouter()
+    hashRouter.route('red', () => {
+        changeColor('red')
+    })
+    hashRouter.route('green', () => {
+        changeColor('green')
+    })
+    hashRouter.route('blue', () => {
+        changeColor('blue')
+    })
+    function go(){
+        hashRouter.go(3)
+    }
+    function back(){
+        hashRouter.back(4)
+    }
+</script>
+</html>

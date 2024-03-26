@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="./HistoryRouter.js"></script>
+<body>
+    <div onclick="back()">回退</div>
+    <div onclick="go()">前进</div>
+</body>
+<script>
+    function changeColor(color) {
+        document.body.style.background = color
+    }
+    let historyRouter = new HistoryRouter()
+    historyRouter.route('/red', () => {
+        changeColor('red')
+    })
+    historyRouter.route('/green', () => {
+        changeColor('green')
+    })
+    historyRouter.route('/blue', () => {
+        changeColor('blue')
+    })
+    historyRouter.init(location.pathname)
+    function go(){
+        hashRouter.go(3)
+    }
+    function back(){
+        hashRouter.back(4)
+    }
+</script>
+</html>

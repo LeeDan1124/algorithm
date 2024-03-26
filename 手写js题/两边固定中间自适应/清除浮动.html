@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 第二种：父级元素设成BFC -->
+    <style type="text/css">
+        #wapper {
+            border: 1px blueviolet solid;
+            /* overflow: hidden;  */
+            zoom: 1;
+        }
+        #float::after{
+            content:'clear';
+            /* display:block;
+            height:0; */
+            clear:both;
+            /* overflow:hidden;
+            visibility:hidden; */
+        }
+        #float{
+            background-color: red;
+            width: 100px;
+            height: 200px;
+            float: left;
+        }
+        #nonfloat {
+            background-color: blue;
+            width: 100px;
+            height: 200px;
+        }
+    </style>
+    <div id="wapper">
+        <div id="float">float</div>
+        <div id="nonfloat">nonFloat</div>
+    </div>
+</body>
+</html>

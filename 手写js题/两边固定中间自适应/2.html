@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 第二种方案，利用绝对定位，
+        注意：
+        1、注意中间的高度为整个内容的高度 
+        2、父级需要设置position：relative，让子元素实现相对于父级的绝对定位
+        否则有顶部对齐问题，需要利用margin进行调整-->
+    <style type="text/css">
+        #wapper {
+            position: relative;
+        }
+        #left {
+            width: 100px;
+            height: 400px;
+            background: yellowgreen;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #mid {
+            height: 400px;
+            background: red;
+        }
+        #right {
+            width: 100px;
+            height: 400px;
+            background: blue;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    </style>
+    <div id="wapper">
+        <div id="left">left</div>
+        <div id="mid">middle</div>
+        <div id="right">right</div>
+    </div>
+    
+</body>
+</html>

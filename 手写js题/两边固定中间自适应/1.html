@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 第三种方案，利用flex -->
+    <style type="text/css">
+        #wapper {
+            display: flex;
+            justify-content: space-around;
+        }
+        #left {
+            width: 100px;
+            height: 400px;
+            background: yellowgreen;
+        }
+        #mid {
+            width: 100%;
+            height: 400px;
+            background: red;
+            margin: 0 10px;
+        }
+        #right {
+            width: 100px;
+            height: 400px;
+            background: blue;
+        }
+    </style>
+    <div id="wapper">
+        <div id="left">left</div>
+        <div id="mid">middle</div>
+        <!-- <div id="right">right</div> -->
+    </div>
+</body>
+</html>

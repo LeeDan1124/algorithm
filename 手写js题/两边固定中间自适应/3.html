@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 第一种方案，利用浮动，左右侧的内容分别左右浮动，
+        但是中间的内容要放在最后，否则会把右侧的内容击倒下面 -->
+    <style type="text/css">
+        #left {
+            width: 100px;
+            height: 400px;
+            background: yellowgreen;
+            float: left;
+        }
+        #mid {
+            height: 400px;
+            background: red;
+            overflow: hidden;
+        }
+        #right {
+            width: 100px;
+            height: 400px;
+            background: blue;
+            float: right;
+        }
+    </style>
+    <div id="wapper">
+        <div id="left">left</div>
+        <div id="right">right</div>
+        <div id="mid">middle</div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let imgList = [
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621371844204348e9036f4f.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621405025473fc0cd5085c3.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16462140676250a726acea160f.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164621404532451913cb9467cd.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16462012654593851ad954189e.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems16461873870977ae78e4f61c8e.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems1646115568687e3f778a063086.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems1646112490153a6dbfef0dbfcb.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164611248100513a6f4bd8fdd6.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems164611244783572bca12014bad.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems15693187904139af872cce7754.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png',
+            'https://j1.58cdn.com.cn/jinrong/images/ems15693187904139af872cce7754.png',
+            "https://j1.58cdn.com.cn/jinrong/images/ems1537957099572acb7eca96b87b.jpg",
+            "https://j1.58cdn.com.cn/jinrong/images/ems1569242409275ad77f5c0e4f23.png",
+            "https://j1.58cdn.com.cn/jinrong/images/ems156930570740806dbb213ca1b7.png"
+        ]
+
+        // 向页面中添加图片
+        imgList.forEach(img => {
+            let oImg = document.createElement('img')
+            oImg.dataUrl = img
+            // oImg.alt = '加载中……'
+            Object.assign(oImg.style, {
+                width: '300px',
+                height: '400px',
+                marginBottom: '20px'
+            })
+            document.body.appendChild(oImg)
+        })
+
+        const oImgs = document.getElementsByTagName('img')
+        // 设备的高
+        let deviceHeight = window.innerHeight || document.documentElement.clientHeight
+
+        // 懒加载
+        function lazyLoad() {
+            // 遍历哪些图片确定需要加载的图片
+            for (var i = 0; i < oImgs.length; i++) {
+                // 如果该图片已经有src属性了，那么就跳过
+                if (oImgs[i].src) continue
+
+                // 元素.getBoundingClientRect()可以获取元素的信息
+                let { top, height } = oImgs[i].getBoundingClientRect()
+
+                // 等价于上述一句代码
+                // let top = oImgs[i].offsetTop - document.documentElement.scrollTop
+                // let height = oImgs[i].height
+
+                let heightDiff = deviceHeight - top
+                // 当设备高-图片距离设备顶部高度小于0时说明图片还未从底部划到视图内；
+                // 当高度差大于设备高+top值时，说明图片已经被划到视图上面了
+                if (heightDiff >= 0 && heightDiff <= (deviceHeight + height)) {
+                    oImgs[i].src = oImgs[i].dataUrl
+                }
+            }
+        }
+
+        // 页面一进来要加载一次
+        lazyLoad()
+        // 每次滚动时去加载图片  为了防止多次触发滚动事件，加一个防抖
+        window.addEventListener('scroll', debounce(lazyLoad), false)
+
+        // 防抖函数
+        function debounce(fn, delay = 500) {
+            let timer
+            return (...args) => {
+                timer && clearTimeout(timer)
+                timer = setTimeout(() => {
+                    fn.call(this, ...args)
+                }, delay)
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

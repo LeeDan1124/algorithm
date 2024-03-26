@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style type="text/css">
+    .wrapper {
+        width: 400px;
+        height: 500px;
+        border: 1px solid black;
+        overflow: scroll;
+    }
+</style>
+<body>
+    <button onclick="renderBigData()">利用requestAnimationFrame渲染</button>
+    <div class="wrapper">
+    </div>
+</body>
+<script>
+    const data = new Array(50000).fill(1).map((item, index) => {return {id: index, name: index + '李旦', age: index + 10}})
+
+    // 当前已渲染的数据
+    let curRenderedData = []
+    const oWrapper = document.getElementsByClassName('wrapper')[0]
+
+    // 将100000条数据进行分堆分组渲染（其实就是前端自己搞一个分页，每页20条，分成1w页，在每一帧的开始给渲染一页数据）
+    // 1、分页
+    // 2、创建渲染函数【初始时渲染第一页的数据
+    // 3、在每一帧的开始前渲染下一帧的数据，递归调用渲染函数
+    const renderBigData = () => {
+        const pagedData = paging(data)
+
+        const renderCurPage = (pageNumber) => {
+            if (pageNumber > pagedData.length - 1) return 
+
+            requestAnimationFrame(() => {
+                // curRenderedData = [...curRenderedData, ...pagedData[pageNumber]]
+                for (let i = 0; i < pagedData[pageNumber].length; i++) {
+                    const oDiv = document.createElement('div')
+                    oDiv.innerHTML = pagedData[pageNumber][i].name
+                    oWrapper.appendChild(oDiv)
+                }
+                const nextPageNumber = pageNumber + 1
+
+                renderCurPage(nextPageNumber)
+            })
+        }
+        renderCurPage(0)
+    }
+
+    // 分页，将10w条数据分成每页20条数据
+    function paging(data) {
+        const newData = []
+        for (let i = 0; i < data.length; i++) {
+            const curPage = data.slice(i, i + 20)
+            newData.push(curPage)
+            i = i + 19
+        }
+        return newData
+    }
+</script>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style type="text/css">
+    #wrapper {
+        width: 200px;
+        height: 200px;
+        border: 1px solid black;
+        overflow: scroll;
+    }
+</style>
+<body>
+    <div id="wrapper">
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+        <p>我要测试节流</p>
+    </div>
+    <button id="btn">点击我</button>
+</body>
+<script>
+
+    // 防抖函数
+    function debounce(func, delay) {
+        let timer = null
+        return (...args) => {
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                func(...args)
+            }, delay)
+        }
+    }
+    document.getElementById('btn').addEventListener('click', debounce(() => {
+        console.log('按钮被点击了')
+    }, 1000))
+
+
+
+    // 节流函数--定时器版
+    function throttle(func, wait) {
+        let timer = null
+        return (...args) => {
+            if (!!timer) return
+
+            func(...args)
+            timer = setTimeout(() => {
+                clearInterval(timer)
+                timer = null
+            }, wait)
+        }
+    }
+
+    // 节流函数--计时器版
+    function throttle1(func, wait) {
+        let lastTime = 0
+        return (...args) => {
+            const waitTime = Date.now() - lastTime
+
+            if (waitTime >= wait) {
+                func(...args)
+                lastTime = Date.now()
+            }
+        }
+    }
+
+
+    document.getElementById('wrapper').addEventListener('scroll', throttle1(() => {
+        console.log('我被滚动了')
+    }, 500))
+
+
+</script>
+</html>

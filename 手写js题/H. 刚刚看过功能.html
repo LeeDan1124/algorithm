@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style type="text/css">
+    .wrapper {
+        width: 360px;
+        height: 500px;
+        border: 1px solid black;
+        overflow: scroll;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .imgItem {
+        width: 110px;
+        height: 200px;
+        background-color: antiquewhite;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .curView {
+        border: 1px solid red;
+    }
+</style>
+
+<body>
+    <button onclick="jumpToTarget()">刚刚看过</button>
+    <div class="wrapper">
+    </div>
+</body>
+<script>
+    // 模拟请求回来的数据
+    const data = [
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500",
+        "https://img1.baidu.com/it/u=1890390320,3399874998&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
+        "https://img1.baidu.com/it/u=2871040287,281219757&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img1.baidu.com/it/u=2218923696,2339183602&fm=253&fmt=auto&app=138&f=PNG?w=1240&h=473",
+        "https://img0.baidu.com/it/u=3557490161,102307037&fm=253&fmt=auto&app=120&f=JPEG?w=750&h=500",
+        "https://img2.baidu.com/it/u=4112799894,3489326481&fm=253&fmt=auto&app=138&f=JPEG?w=650&h=389",
+        "https://img2.baidu.com/it/u=4008146120,512111027&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        "https://img1.baidu.com/it/u=823166128,984687870&fm=253&fmt=auto&app=138&f=JPEG?w=942&h=500",
+        "https://img0.baidu.com/it/u=2747776293,3603828582&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500",
+        "https://img0.baidu.com/it/u=2182817849,336818780&fm=253&fmt=auto&app=138&f=JPEG?w=708&h=500"
+    ]
+    const oWrapper = document.getElementsByClassName('wrapper')[0]
+
+    const visibleIndexs = new Set() // 视口里可见的图片索引
+    const onePageNumber = 9 // 一页展示几条
+    let hadCreateIndex = -1 // 已经创建到第几个图片了
+    const targetIndex = 34 // 这个应该是由接口提供的数据算出来的图片index
+
+    const loadPage = () => {
+        const minIndex = Math.min(...visibleIndexs) // 视口里显示的第一个图片的索引
+        const maxIndex = Math.max(...visibleIndexs) // 视口里显示的最后一个图片的索引
+
+        // const minPage = Math.ceil(minIndex / onePageNumber)
+        // const maxPage = Math.ceil(maxIndex / onePageNumber)
+
+        // 这里的data模拟调用接口获取的
+        for (let i = 0; i < data.length; i++) {
+            const item = oWrapper.children[i + minIndex]
+            item.src = data[i]
+        }
+    }
+
+    // 监听元素是否进入了视口
+    const io = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry, index) => {
+                // 当图片进入视口后记录索引，离开视口后删除索引，拿到这些索引后，就知道视口里展示的是第几页的数据，就可以去调接口，拿数据
+                if (entry.isIntersecting) {
+                    const img = entry.target
+                    visibleIndexs.add(img.dataset.index)
+                } else {
+                    visibleIndexs.delete(img.dataset.index)
+                }
+            })
+            loadPage()
+        },
+        {
+            root: oWrapper, // 监听的元素与哪个元素交叉 一般是父元素或者祖先元素 
+            rootMargin: '0px', // root外扩或者内缩的距离
+            threshold: 0.1 // 与root交叉程度，范围是0-1，当其监听到目标元素的可见部分（的比例）超过了一个或多个阈值（threshold）时，会执行指定的回调函数
+        }
+    )
+
+    /*
+    创建几页的空元素    
+    */
+    const createImgElement = (pages) => {
+        const number = onePageNumber * pages
+        // 从没创建的开始创建，如果已经创建了就不再重复创建了
+        for (let i = hadCreateIndex + 1; i < number; i++) {
+            // 1、创建空元素
+            const oImg = document.createElement('img')
+            oImg.src = '../../imgs/未选中.png'
+            oImg.className = 'imgItem'
+            oImg.dataset.index = i
+
+            // 2、填到父元素里
+            oWrapper.appendChild(oImg)
+
+            hadCreateIndex = i
+
+            if (i === targetIndex) {
+                oImg.className = 'imgItem curView'
+            }
+
+            // 3、每创建一个就监视一个
+            io.observe(oImg)
+        }
+    }
+    // 刚进页面时要先创建1页的元素进行展示
+    createImgElement(1)
+
+    // 点击“刚刚看过”按钮进行跳转至目标元素 需要接口告知，刚刚看的视频index是多少
+    const jumpToTarget = () => {
+        // 1、算出刚刚看过的视频在第几页
+        const targetPage = Math.ceil(targetIndex / onePageNumber)
+        createImgElement(targetPage)
+        // 2、将该元素滚动到视口中
+        oWrapper.children[targetIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        })
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style type="text/css">
+        #refresh-tip {
+            text-align: center;
+        }
+    </style>
+    <div id="refresh-tip"></div>
+    <p id="content">
+        1948年的春夏之交，毛主席转移到了花山村。在临时借用的农家房舍里，他夜以继日地为解放全中国的事业操劳着。
+        一天早晨，毛主席正在看地图，忽然抬起头，问警卫员：“昨天这个时候，门口花椒树下的碾（niǎn）子有碾米声，现在又到了碾米的时候，怎么没动静了呢？”
+        警卫员说：“报告主席，为了不影响您工作，我和村长商量了，要他请乡亲们到别处碾去了。”毛主席皱了皱眉，把拿起来的香烟又放下了。“这怎么行？”他严肃地说，“这会影响群众吃饭的，不能因为我们在这里工作，就影响群众的生活。昨天傍晚，我们一起散步，你也看见了，这个村只有两台石碾，让乡亲们集中到一个碾子上碾米，就会耽误一半人的正常吃饭。”
+        警卫员解释道：“这碾子一转，对您工作干扰太大。”
+    </p>
+    <script>
+        /*
+            1、监听touchstart事件，记录开始时的位置startY
+            2、监听touchmove事件，记录往下拉拉了多长，并将元素跟随手势向下划动对应的距离，当下拉到最大距离时，提醒”释放更新“
+            3、监听touchend事件，执行下拉后的回调，执行完后将元素移回原位
+        */
+        function pullDown(content, tipwapper, callback) {
+            let startY, curY, endY
+
+            // 触摸开始
+            oContent.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].pageY  // 触摸的开始位置
+            }, false)
+
+            // 正在滑动
+            oContent.addEventListener('touchmove', (e) => {
+                curY = e.touches[0].pageY  // 移动到哪个位置了
+                const diffY = curY - startY  // 此时的Y与开始时Y位置的差值
+
+                if (diffY > 0 && diffY < 60) {
+                    oTip.innerText = '下拉刷新……'
+                    oContent.style.transform = `translateY(${diffY}px)`
+                    oContent.style.transition = 'transform 0.5s ease-in'
+
+                    if (diffY >= 55) {
+                        oTip.innerText = '释放刷新……'
+                    }
+                }
+            }, false)
+
+            // 滑动结束
+            oContent.addEventListener('touchend', async () => {
+                oTip.innerText = '更新中...';
+                await callback()
+                oContent.style.transition = 'transform 0.5s ease 1s';
+                oContent.style.transform = 'translateY(0px)';
+                oTip.innerText = '';
+            }, false)
+        }
+
+        // 使用
+        let oContent = document.getElementById('content')
+        let oTip = document.getElementById('refresh-tip')
+        pullDown(oContent, oTip, () => {
+            let oContent = document.getElementById('content')
+            oContent.innerHTML = '我是刚加载来的数据' + oContent.innerHTML
+        })
+    </script>
+</body>
+
+</html>

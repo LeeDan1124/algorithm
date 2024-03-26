@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="requestData()">请求数据</button>
+    <script src="./axios.js"></script>
+    <script>
+       
+        function requestData() {
+            // axios({
+            //     method: 'get',
+            //     baseURL: 'http://localhost:1124',
+            //     url: 'getInfo',
+            //     params: {name: 'lidan', age: 27},
+            //     // 由于设置简单请求以外的请求头，所以此次请求会先发送一次预检请求
+            //     header: {'x-csrf-token': 'llldddaaannn'},
+            // }).then(res => {
+            //     console.log(res, '====axios')
+            // }) 
+
+            axios.interceptors.request.use(configs => {
+                console.log('请求拦截')
+                return { ...configs, params: {}}
+            }, err => {
+                console.log(err)
+            })
+
+            axios.interceptors.response.use(response => {
+                console.log('响应拦截')
+                return response
+            }, err => {
+                console.log(err)
+            })
+
+            axios.get('getInfo', {
+                baseURL: 'http://localhost:1124',
+                params: {name: 'lidan', age: 27},
+                // 由于设置简单请求以外的请求头，所以此次请求会先发送一次预检请求
+                header: {'x-csrf-token': 'llldddaaannn'},
+            }).then(res => {}) 
+
+            // axios.post('getInfoPost', {name: 'lidan', age: 27}, {
+            //     baseURL: 'http://localhost:1124',
+            //     // 由于设置简单请求以外的请求头，所以此次请求会先发送一次预检请求
+            //     header: {'x-csrf-token': 'llldddaaannn'},
+            // }).then(res => {}) 
+        }
+    </script>
+</body>
+
+</html>

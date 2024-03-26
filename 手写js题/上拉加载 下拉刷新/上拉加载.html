@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>
+        当我们点击按钮，会同时向页面中加入一万条记录，通过控制台的输出，我们可以粗略的统计到，JS的运行时间为38ms,但渲染完成后的总时间为957ms。
+        简单说明一下，为何两次console.log的结果时间差异巨大，并且是如何简单来统计JS运行时间和总渲染时间：
+
+        在 JS 的Event Loop中，当JS引擎所管理的执行栈中的事件以及所有微任务事件全部执行完后，才会触发渲染线程对页面进行渲染
+        第一个console.log的触发时间是在页面进行渲染之前，此时得到的间隔时间为JS运行所需要的时间
+        第二个console.log是放到 setTimeout 中的，它的触发时间是在渲染完成，在下一次Event Loop中执行的
+
+        关于Event Loop的详细内容请参见这篇文章-->
+        然后，我们通过Chrome的Performance工具来详细的分析这段代码的性能瓶颈在哪里：
+
+        从Performance可以看出，代码从执行到渲染结束，共消耗了960.8ms,其中的主要时间消耗如下：
+
+        Event(click) : 40.84ms
+        Recalculate Style : 105.08ms
+        Layout : 731.56ms
+        Update Layer Tree : 58.87ms
+        Paint : 15.32ms
+    </p>
+    <script>
+        let text = `1948年的春夏之交，毛主席转移到了花山村。在临时借用的农家房舍里，他夜以继日地为解放全中国的事业操劳着。
+
+                一天早晨，毛主席正在看地图，忽然抬起头，问警卫员：“昨天这个时候，门口花椒树下的碾（niǎn）子有碾米声，现在又到了碾米的时候，怎么没动静了呢？”
+
+                警卫员说：“报告主席，为了不影响您工作，我和村长商量了，要他请乡亲们到别处碾去了。”毛主席皱了皱眉，把拿起来的香烟又放下了。“这怎么行？”他严肃地说，“这会影响群众吃饭的，不能因为我们在这里工作，就影响群众的生活。昨天傍晚，我们一起散步，你也看见了，这个村只有两台石碾，让乡亲们集中到一个碾子上碾米，就会耽误一半人的正常吃饭。”
+
+                警卫员解释道：“这碾子一转，对您工作干扰太大。”
+
+                毛主席递给他一支烟，自己也点燃了一支，说：“这怎么会呢？多年的战争生活，使我习惯了在各种环境中工作。这样吧，我交给你一个任务，尽快把乡亲们请到这里来碾米。”
+
+                “是！”警卫员拔腿就走。
+
+                “注意，抽着烟和群众说话是不礼貌的。说话态度要诚恳。”主席说。
+
+                警卫员回头一笑：“知道了，请主席放心。”他走出小院，碰上村长正和一个端簸(bò)箕(jī)的大娘说话。警卫员迎上去，问：“村长，这位大娘是要去花椒树下推碾子吧？”
+
+                大娘用手拢了拢搭在耳下的头发：“不，俺(ǎn)去西头。”说着转身就要走。警卫员忙对村长说：“村长，是首长让我请乡亲们来花椒树下碾米。”村长沉思了一下，说：“这碾子一响，就得转到天黑，怕误首长的事呢。”警卫员再三解释，村长才答应了，对那位大娘说：“那你就去花椒树下碾吧。”`
+        let oArtical = document.getElementsByTagName('p')[0]
+        
+        function loadMore(cb) {
+            const scrollTop = document.documentElement.scrollTop
+            const deviceHeight = window.innerHeight || document.documentElement.clientHeight
+            const scrollHeight = document.body.scrollHeight
+
+            // 距离底部还有50时加载新内容
+            if ((scrollTop + deviceHeight) >= (scrollHeight - 50)) {
+                cb()
+            }
+        }
+
+        function callback() {
+            oArtical.innerHTML += text
+        }
+        window.addEventListener('scroll', () => loadMore(callback), false)
+
+       
+    </script>
+</body>
+
+</html>

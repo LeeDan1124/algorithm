@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <text id="odiv">快来监听我的变化</text>
+</body>
+<script>
+    const textNode = document.createTextNode('1')
+    const mo = new MutationObserver(() => {
+        console.log('我变化啦')
+    })
+    mo.observe(
+        textNode,
+        {
+            characterData: true // 当odiv的文本变化时触发
+        }
+    )
+    textNode.data = '2'
+</script>
+</html>
