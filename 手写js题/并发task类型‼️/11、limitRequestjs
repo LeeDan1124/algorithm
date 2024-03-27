@@ -1,0 +1,30 @@
+// 修改a.js中的代码，实现b.js在请求回来数据后在发起下一个请求
+// a.js
+
+let limitRequest = (url) => {
+  const queue = []
+  queue.push(() => {
+    return fetch(url)
+  })
+
+  const limit = 1
+  let running = 0
+
+  const RunTask = async () => {
+    if (queue.length && running < limit) {
+      running++
+      const curQueue = queue.shift()
+      curQueue().then(() => {
+        running--
+        RunTask()
+      })
+    }
+  }
+
+  RunTask()
+}
+
+// b.js
+limitRequest('/1').then(res => {})
+limitRequest('/2').then(res => {})
+limitRequest('/3').then(res => {})
