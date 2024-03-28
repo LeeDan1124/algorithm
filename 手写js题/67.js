@@ -1,5 +1,6 @@
 /**
- * 实现 Promise.any 功能，执行一组promise，其中任意一个 promise resolve 即成功，then 返回该 promise 结果，全部 promise 都 reject 时返回 new Error('All promises were rejected')
+ * 实现 Promise.any 功能，执行一组promise，其中任意一个 promise resolve 即成功，then 返回该 promise 结果，
+ * 全部 promise 都 reject 时返回 new Error('All promises were rejected')
  */
 // http://conf.ctripcorp.com/pages/viewpage.action?pageId=685024559
 function PromiseAny(promiseArray) {
