@@ -1,3 +1,4 @@
+// ✅
 class Scheduler {
   constructor(maxLimit, taskList, callback) {
     this.maxLimit = maxLimit;
@@ -50,6 +51,7 @@ let p4 = new Promise((resolve) => {
 });
 
 // 依次执行，执行结束后在callback中返回
+// 其实就是实现Promise.all的功能
 new Scheduler(2, [p1, p2, p3, p4], (res) => {
   console.log(res); // [1, 2, 3, 4]
 });

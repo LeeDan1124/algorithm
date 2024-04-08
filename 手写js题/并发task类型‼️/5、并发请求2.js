@@ -1,35 +1,34 @@
-
 /**
  * @param {*Array} urls 接口请求的url
  * @param {*number} maxLimit 最大的并发数
  */
 function bingFa(urls, maxLimit) {
-  let runningIndex = 0
-  let index = 0
+  let runningIndex = 0;
+  let index = 0;
 
   function inner() {
-    while(runningIndex <= maxLimit && !!urls.length) {
-      runningIndex++
-      index++
-      const curTaskUrl = urls.shift()
+    while (runningIndex <= maxLimit && !!urls.length) {
+      runningIndex++;
+      index++;
+      const curTaskUrl = urls.shift();
 
       new Promise((resolve) => {
         setTimeout(() => {
-          resolve(curTaskUrl)
-        }, index * 1000)
-      }).then(res => {
-        console.log(res + '执行结束')
-        runningIndex--
-        inner()
-      })
+          resolve(curTaskUrl);
+        }, index * 1000);
+      }).then((res) => {
+        console.log(res + "执行结束");
+        runningIndex--;
+        inner();
+      });
     }
-  } 
-  inner()
+  }
+  inner();
 }
 
 // bingFa([
 //   'url/1', //1s
-//   'url/2', //2s 
+//   'url/2', //2s
 //   'url/3', //3s
 //   'url/4', //
 //   'url/5',
@@ -38,12 +37,11 @@ function bingFa(urls, maxLimit) {
 //   'url/8',
 // ], 3)
 
-
-class Scheduler{
+class Scheduler {
   constructor() {
-    this.queue = []
-    this.runningNum = 0
-    this.maxLimit = 2
+    this.queue = [];
+    this.runningNum = 0;
+    this.maxLimit = 2;
   }
 
   // add传入一个task，返回一个promise，要思考返回的这个promise是什么时间解决的
@@ -54,90 +52,113 @@ class Scheduler{
         return promiseTask()
           .then(resolve, reject)
           .finally(() => {
-            this.runningNum--
-            this.runTask()
-          })
-      }
+            this.runningNum--;
+            this.runTask();
+          });
+      };
 
       // 当传入的task还没有达到并发数量时，就直接执行，如果达到并发数了，就推到队列里去
       if (this.runningNum < this.maxLimit) {
-        this.runningNum++
-        runOneTask()
+        this.runningNum++;
+        runOneTask();
       } else {
         // 这里为什么不是直接推promiseTask，而是推runOneTask，是为了保存当前任务完成后要用到的resolve, reject
-        this.queue.push(runOneTask)
+        this.queue.push(runOneTask);
       }
-    })
+    });
   }
 
   runTask() {
     if (this.runningNum < this.maxLimit && this.queue.length > 0) {
-      this.runningNum++
-      const curTask = this.queue.shift()
-      curTask()
-        .then(() => {
-          this.runningNum--
-          this.runTask()
-        })
+      this.runningNum++;
+      const curTask = this.queue.shift();
+      curTask().then(() => {
+        this.runningNum--;
+        this.runTask();
+      });
     }
   }
 }
 
-
-
-
-class Scheduler1{
+class Scheduler2 {
   constructor() {
-    this.queue = []
-    this.runningNum = 0
-    this.maxLimit = 2
+    this.queue = [];
+    this.runningNum = 0;
+    this.maxLimit = 2;
   }
 
   add(promiseTask) {
     return new Promise((resolve, reject) => {
       const runOneTask = () => {
-        return promiseTask()
-          .then(resolve, reject)
-          // .finally(() => {
-          //   this.runningNum--
-          //   this.runTask()
-          // })
-      }
+        return promiseTask().then(resolve, reject);
+        // .finally(() => {
+        //   this.runningNum--
+        //   this.runTask()
+        // })
+      };
       // if (this.runningNum < this.maxLimit) {
       //   this.runningNum++
       //   runOneTask()
       // } else {
-        this.queue.push(runOneTask)
-        this.runTask()
+      this.queue.push(runOneTask);
+      this.runTask();
       // }
-    })
+    });
   }
 
   runTask() {
     if (this.runningNum < this.maxLimit && this.queue.length > 0) {
-      this.runningNum++
-      const curTask = this.queue.shift()
-      curTask()
-        .then(() => {
-          this.runningNum--
-          this.runTask()
-        })
+      this.runningNum++;
+      const curTask = this.queue.shift();
+      curTask().then(() => {
+        this.runningNum--;
+        this.runTask();
+      });
     }
   }
 }
 
+class Scheduler1 {
+  constructor(limit = 2) {
+    this.limit = limit;
+    this.taskList = [];
+    this.runningNum = 0;
+  }
+
+  add(task) {
+    return new Promise((resolve) => {
+      this.taskList.push(task);
+
+      while (this.runningNum < this.limit && this.taskList.length) {
+        this.runTask(resolve);
+      }
+    });
+  }
+
+  runTask(resolve) {
+    const curTask = this.taskList.shift();
+    this.runningNum++;
+    curTask().finally(() => {
+      resolve();
+      this.runningNum--;
+      this.runTask();
+    });
+  }
+}
 
 // 测试
 const timeout = (time, order) => {
   return new Promise((resolve, reject) => {
-      setTimeout(resolve, time)
-  })
-} 
+    setTimeout(resolve, time);
+  });
+};
 const scheduler = new Scheduler1();
 const addTask = (time, order) => {
-scheduler
-  .add(() => timeout(time, order))
-  .then(() => {console.log(order)})
+  scheduler
+    .add(() => timeout(time, order))
+    .then(() => {
+      console.log(order);
+    });
 };
 addTask(1000, "1");
 addTask(500, "2");
