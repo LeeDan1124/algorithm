@@ -24,19 +24,50 @@ addTask(400,"4");
  * 3、当柜台有其中一个空出来后，再从排队的人里叫一个过来执行【执行完从任务队列里取没执行的】
  */
 
+class Scheduler {
+  constructor(maxLimit) {
+    this.maxLimit = maxLimit;
+    this.taskLisk = [];
+    this.curNums = 0;
+  }
+
+  add(delay, order) {
+    const task = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log(order);
+          resolve();
+        }, delay);
+      });
+    };
+    this.taskLisk.push(task);
+  }
+
+  taskStart() {
+    while (this.curNums < this.maxLimit && this.taskLisk.length) {
+      const curTask = this.taskLisk.shift();
+      this.curNums++;
+      curTask().finally(() => {
+        this.curNums--;
+        this.taskStart();
+      });
+    }
+  }
+}
+
 // 测试
 // const task = (time, order) => {
-//     setTimeout(() => {
-//         console.log(order + '执行完了')
-//     }, time)
-// }
-
-// const scheduler = new Scheduler(2); // 只能并发两个请求
-// const addTask = (time, order) => {
-//   scheduler.add(time, order);
+//   setTimeout(() => {
+//     console.log(order + "执行完了");
+//   }, time);
 // };
-// addTask(1000, "1");
-// addTask(500, "2");
-// addTask(300, "3");
-// addTask(400, "4");
-// scheduler.taskStart();
+
+const scheduler = new Scheduler(2); // 只能并发两个请求
+const addTask = (time, order) => {
+  scheduler.add(time, order);
+};
+addTask(1000, "1");
+addTask(500, "2");
+addTask(300, "3");
+addTask(400, "4");
+scheduler.taskStart();

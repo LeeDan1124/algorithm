@@ -1,75 +1,80 @@
-class LazyManO{
+class LazyManO {
   constructor(manName) {
-    this.tasks = [() => {
-      console.log(`Hi! This is ${manName}`)
-      this.next() // 这里也要有一个执行this.next的动作，是为了执行下一个task
-    }]
+    this.tasks = [];
 
-    // 使用setTimeout可以利用宏任务的特点，实现所有的task都收集好，再开始执行
+    const initTask = () => {
+      return new Promise((resolve) => {
+        console.log(`Hi! This is ${manName}`);
+        resolve();
+      });
+    };
+    this.tasks.push(initTask);
+
     setTimeout(() => {
-      this.next()
-    })
+      this.runTask();
+    });
   }
 
-  next() {
-    if (this.tasks.length === 0) return
-    const curTask = this.tasks.shift()
-    curTask()
+  _sleepTask(delay) {
+    const sleepTask = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log(`Wake up after ${delay}`);
+          resolve();
+        }, delay * 1000);
+      });
+    };
+    return sleepTask;
   }
-  
+
   sleep(delay) {
-    const task = () => {
-      setTimeout(() => {
-        console.log(`Wake up after ${delay}`)
-        this.next()  // 在这里执行this.next可以实现同步执行sleep的效果
-      }, delay * 1000)
-    }
-    this.tasks.push(task)
-    return this
-  }
-
-  eat(food) {
-    const task = () => {
-      console.log(`Eat ${food}`)
-      this.next()
-    }
-    this.tasks.push(task)
-    return this
+    this.tasks.push(this._sleepTask(delay));
+    return this;
   }
 
   sleepFirst(delay) {
-    const task = () => {
-      setTimeout(() => {
-        console.log(`Wake up after ${delay}`)
-        this.next()
-      }, delay * 1000)
-    }
-    this.tasks.unshift(task)  // 这里要放到任务队列的第一个
-    return this
+    this.tasks.unshift(this._sleepTask(delay));
+    return this;
+  }
+
+  eat(food) {
+    const eatTask = () => {
+      return new Promise((resolve) => {
+        console.log(`Eat ${food}~`);
+        resolve();
+      });
+    };
+    this.tasks.push(eatTask);
+    return this;
+  }
+
+  async runTask() {
+    if (!this.tasks.length) return;
+    const curTask = this.tasks.shift();
+    await curTask();
+    this.runTask();
   }
 }
 
 function LazyMan(manName) {
-  return new LazyManO(manName)
+  return new LazyManO(manName);
 }
 
+LazyMan("Hank"); // Hi! This is Hank
 
-LazyMan('Hank') // Hi! This is Hank
-
-LazyMan('Hank').sleep(10).eat('dinner') 
+LazyMan("Hank").sleep(3).eat("dinner");
 // Hi! This is Hank
 // 等待10s
 // Wake up after 10
 // Eat dinner~
 
-LazyMan('Hank').eat('dinner').eat('supper') 
+LazyMan("Hank").eat("dinner").eat("supper");
 // Hi! This is Hank
 // Eat dinner~
 // Eat supper~
 
-LazyMan('Hank').sleepFirst(5).eat('supper') 
+LazyMan("Hank").sleepFirst(5).eat("supper");
 // 等待5s
 // Wake up after 5
 // Hi! This is Hank
 // Eat supper~
-
