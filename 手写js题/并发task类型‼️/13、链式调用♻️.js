@@ -1,4 +1,4 @@
-// ✅
+// ✅ 🔁
 class LazyManO {
   constructor(manName) {
     this.tasks = [];

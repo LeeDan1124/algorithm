@@ -1,6 +1,28 @@
 // 这种方式是按照延时顺序执行
 class QueueByDelay {
- 
+  constructor() {
+    this.tasks = []
+  }
+
+  task(delay, cb) {
+    const _task = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          cb()
+          resolve()
+        }, delay)
+      })
+    }
+    this.tasks.push(_task)
+    return this
+  }
+
+  async start() {
+    for(let i = 0; i < this.tasks.length; i++) {
+      const curTask = this.tasks[i]
+      curTask()
+    }
+  }
 }
 
 /**
@@ -24,6 +46,32 @@ new QueueByDelay()
 
 // 按照task添加的顺序执行
 class QueueByTaskOrder {
+
+  constructor() {
+    this.tasks = []
+  }
+
+  task(delay, cb) {
+    const _task = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          cb()
+          resolve()
+        }, delay)
+      })
+    }
+    this.tasks.push(_task)
+    return this
+  }
+
+  async start() {
+    for(let i = 0; i < this.tasks.length; i++) {
+      const curTask = this.tasks.shift()
+      await curTask()
+      i--
+    }
+  }
+
 }
 
 /**

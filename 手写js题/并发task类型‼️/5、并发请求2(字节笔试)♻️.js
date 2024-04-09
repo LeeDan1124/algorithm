@@ -1,3 +1,4 @@
+// ✅ 🔁
 /**
  * @param {*Array} urls 接口请求的url
  * @param {*number} maxLimit 最大的并发数
@@ -125,24 +126,26 @@ class Scheduler1 {
     this.runningNum = 0;
   }
 
-  add(task) {
-    return new Promise((resolve) => {
+  add(promiseTask) {
+    return new Promise((resolve, reject) => {
+      const task = () => {
+        return promiseTask().then(resolve, reject)
+      }
       this.taskList.push(task);
 
-      while (this.runningNum < this.limit && this.taskList.length) {
-        this.runTask(resolve);
-      }
+      this.runTask()
     });
   }
 
-  runTask(resolve) {
-    const curTask = this.taskList.shift();
-    this.runningNum++;
-    curTask().finally(() => {
-      resolve();
-      this.runningNum--;
-      this.runTask();
-    });
+  runTask() {
+    while (this.runningNum < this.limit && this.taskList.length) {
+      const curTask = this.taskList.shift();
+      this.runningNum++;
+      curTask().finally(() => {
+        this.runningNum--;
+        this.runTask()
+      });
+    }
   }
 }
 
