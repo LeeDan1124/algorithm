@@ -4,6 +4,8 @@
 
 function compare(object1, object2) {
   // 补全代码
+  
+
 }
  
 let a = {}, b = {}, c = {}, d = {};
