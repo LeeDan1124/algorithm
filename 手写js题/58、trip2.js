@@ -1,4 +1,6 @@
-// 实现 compare(object1, object2) => bool 函数，对 object1 和 object2 做深度对比，每一个键对应的值可能为 string、number、array (每一项的值受同等约束)、object (每一个键对应的值受同等约束)，可能存在 object 或 array 递归引用，返回 true 或 false
+// 实现 compare(object1, object2) => bool 函数，对 object1 和 object2 做深度对比，
+// 每一个键对应的值可能为 string、number、array (每一项的值受同等约束)、object (每一个键对应的值受同等约束)，
+// 可能存在 object 或 array 递归引用，返回 true 或 false
 
 function compare(object1, object2) {
   // 补全代码
