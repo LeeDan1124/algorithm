@@ -17,7 +17,7 @@ function download(url, timeout = Infinity, completeCallback) {
   // 1、设置超时时间，并设置超时回调
   xhr.timeout = timeout
   xhr.ontimeout = (e) => {
-    completeCallback && completeCallback(e)
+    completeCallback && completeCallback(new Error('XHR Timeout'))
     return e
   }
 
@@ -27,9 +27,11 @@ function download(url, timeout = Infinity, completeCallback) {
         if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
           completeCallback && completeCallback(null, xhr.response)
           // return xhr.response
+        } else {
+            completeCallback && completeCallback(new Error('Network Error'))
         }
       } catch(e) {
-        completeCallback && completeCallback(e)
+        completeCallback && completeCallback(new Error('Network Error'))
       }
     }
   }
@@ -68,3 +70,35 @@ XHR Timeout
 /*
 Network Error
 */
+
+// 参考答案
+/*
+评分重点：
+1. XMLHttpRequest 事件注册完整，错误正确回调 [ 0-3 ]
+2. xhr.responseType 设置正确 [ 0-1 ]
+3. xhr.timeout 或 setTimeout 设置正确 [ 0-1 ]
+4. xhr.status 判断正确 [ 0-1 ]
+5. 其他 [ 0-4 ]
+*/
+ 
+function download(url, timeout = Infinity, progressCallback, completeCallback) {
+    // 补全代码
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("error", function () {
+        completeCallback(new Error("Network Error"));
+    }, false);
+    xhr.addEventListener("timeout", function (evt) {
+        completeCallback(new Error('XHR Timeout'));
+    }, false);
+    xhr.addEventListener("load", function () {
+        if (xhr.status == 200) {
+            completeCallback(null, xhr.response);
+        } else {
+            completeCallback(new Error(`Invalid Status Code: ${xhr.status}`));
+        }
+    }, false);
+    xhr.open("GET", url, true);
+    xhr.responseType = "arraybuffer";
+    xhr.timeout = timeout;
+    xhr.send();
+}
