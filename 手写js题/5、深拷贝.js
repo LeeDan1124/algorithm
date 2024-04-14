@@ -1,5 +1,28 @@
+// ✅
+const cache = new Map()
 function deepClone(value) {
+    if (typeof value !== 'object' || value === null) return value
+    
+    let res = Array.isArray(value) ? [] : {}
+    Object.keys(value).forEach(key => {
+        const val = value[key]
+        if (cache.has(val)) {
+            res[key] = cache.get(val)
+        } else {
+            cache.set(val, val)
+            if (val instanceof Set) {
+                // console.log(val, new Set([...val]),'--🍊')
+                res[key] = new Set([...val])
+            }
+            if (val instanceof Map) {
+                // console.log(val, new Map([...val]),'--🍉')
+                res[key] = new Map([...val])
+            }
+            res[key] = deepClone(value[key])
+        }
+    })
 
+    return res
 }
 
 const val = {
@@ -19,7 +42,10 @@ const val = {
 }
 val.e = val
 
-console.log(JSON.stringify(deepClone(val)), '---')
+const a = deepClone(val)
+const b = a
+
+// console.log(JSON.stringify(deepClone(val)),JSON.stringify(val), '---')
 
 
 

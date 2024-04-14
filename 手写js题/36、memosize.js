@@ -1,5 +1,18 @@
-const memoize = (fun, resolver) => {
-
+// ✅
+const memoize = (fun) => {
+    const cache = new Map()
+    const innerFun = (argus) => {
+        const key = argus
+       
+        if (cache.has(key)) {
+            return cache.get(key)
+        }
+        const res = fun(argus)
+        cache.set(key, res)
+        return res
+    }
+    innerFun.cache = cache
+    return innerFun
 }
 
 const obj = {a: 1, b: 2}

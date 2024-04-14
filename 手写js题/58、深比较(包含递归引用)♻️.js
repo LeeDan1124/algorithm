@@ -122,12 +122,6 @@ console.log('#4:', compare(c, d));
 7. 其他 [ 0-3 ]
 */
  
-/*
-function compare(object1, object2) {
-  let refs = new Refs();
-  return _compare(object1, object2, refs);
-}
- 
 class Refs {
   constructor() {
     this._refs = new Map();
@@ -198,4 +192,9 @@ function _compare(object1, object2, refs) {
       return object1 == object2;
   }
 }
-*/
+
+function compare(object1, object2) {
+  let refs = new Refs();
+  return _compare(object1, object2, refs);
+}
+ 

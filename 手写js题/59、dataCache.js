@@ -1,6 +1,11 @@
 /**
  * 
- * 实现一个缓存 DataCache 类，要求包含 get(key) => value 和 set(key, value, ttl) 方法 ( key 为 string，value 为任意值，ttl 为缓存时长，单位毫秒 )，针对同一 key 反复 set 可覆盖值和缓存时长，缓存 key 最多 100 条，采用 LRU 算法（缓存满后删除最久未使用的 key），注意及时清理过期缓存以保证 LRU 算法准确性
+ * 实现一个缓存 DataCache 类，要求包含 get(key) => value 和 set(key, value, ttl) 方法 
+ * ( key 为 string，value 为任意值，ttl 为缓存时长，单位毫秒 )，
+ * 1、针对同一 key 反复 set 可覆盖值和缓存时长，
+ * 2、缓存 key 最多 100 条，
+ * 3、采用 LRU 算法（缓存满后删除最久未使用的 key），
+ * 4、注意及时清理过期缓存以保证 LRU 算法准确性
  */
 class DataCache {
   constructor() {
