@@ -14,13 +14,7 @@ function fn4(x) {
 const a = compose2(fn1, fn2, fn3, fn4);
 console.log(a(1)); // 1+4+3+2+1=11
 
-
-
-function _compose(...fns) {
-   
-}
-
-
+function _compose(...fns) {}
 
 const b = _compose(fn1, fn2, fn3, fn4);
 console.log(b(1)); // 1+4+3+2+1=11
