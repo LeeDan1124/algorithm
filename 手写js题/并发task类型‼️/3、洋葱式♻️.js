@@ -13,7 +13,11 @@ class TaskPro {
   }
 
   addTask(func) {
+    if (typeof func !== "function") {
+      throw new Error("需传入一个函数");
+    }
     this.tasks.push(func);
+    return this;
   }
 
   async run() {
@@ -22,8 +26,9 @@ class TaskPro {
     const startIndex = this.runningIndex;
 
     const curTask = this.tasks.shift();
-    await curTask(this.next);
-
+    try {
+      await curTask(this.next);
+    } catch (e) {}
     const endIndex = this.runningIndex;
 
     if (startIndex === endIndex) {

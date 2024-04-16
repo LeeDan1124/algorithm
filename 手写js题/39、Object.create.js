@@ -6,18 +6,16 @@
  * propertiesObject: 实例的自有属性
  */
 
-_create = (obj, propertiesObject={}) => {
-
-}
+_create = (obj, propertiesObject = {}) => {};
 
 var person = {
-	age:18,
-	friend:['gray','amili','adward']
-}
-var instance1 = _create(person, {sex:"male"})
-var instance2 = _create(person)
-console.log(instance1) //{ sex: 'male' }
-console.log(instance2) //{}
+  age: 18,
+  friend: ["gray", "amili", "adward"],
+};
+var instance1 = _create(person, { sex: "male" });
+var instance2 = _create(person);
+console.log(instance1); //{ sex: 'male' }
+console.log(instance2); //{}
 
-console.log(instance1.friend) //[ 'gray', 'amili', 'adward' ]
-console.log(instance2.age) //18
+console.log(instance1.friend); //[ 'gray', 'amili', 'adward' ]
+console.log(instance2.age); //18
