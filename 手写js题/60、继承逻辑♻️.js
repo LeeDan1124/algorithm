@@ -22,10 +22,6 @@ class Dog extends Cat {
 class Mouse {
   constructor(instance) {
     // 补全代码
-    Object.setPrototypeOf(instance, this);
-    Object.setPrototypeOf(this.__proto__, instance.__proto__.prototype);
-    // this.__proto__ = Cat;
-    // instance.__proto__ = this;
     return instance;
   }
   print() {

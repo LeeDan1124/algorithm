@@ -3,10 +3,9 @@
     this.left = null;
     this.right = null;
 } */
-function TreeDepth(pRoot)
-{
-    // write code here
+function TreeDepth(pRoot) {
+  // write code here
 }
 module.exports = {
-    TreeDepth : TreeDepth
+  TreeDepth: TreeDepth,
 };

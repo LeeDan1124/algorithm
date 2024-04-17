@@ -16,7 +16,7 @@ class Dog extends Cat {
   }
 }
 
-// 编译成es5后的最终结果
+// 编译成es5后的最终结果【其实class是按照es5的寄生式组合继承走的 盗用构造函数+原型式继承】
 function Cat() {}
 Cat.prototype.print = function () {
   console.log("cat");
