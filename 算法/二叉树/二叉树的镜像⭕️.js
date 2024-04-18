@@ -27,6 +27,17 @@ six.right = seven
 
 
 function Mirror(root) {
-  
+  if (!root) return null
+
+  const left = root.left
+  const right = root.right
+
+  root.left = right
+  root.right = left
+
+  Mirror(root.left)
+  Mirror(root.right)
+
+  return root
 }
 console.log(JSON.stringify(Mirror(one)))
