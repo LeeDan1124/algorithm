@@ -9,3 +9,10 @@
 输出: [-1]
  
  */
+
+function buildTreeFromPreMid(preorder, inorder) {
+  if (!preorder || !preorder.length || !inorder || !inorder.length) return [-1];
+
+  const rootNodeVal = preorder[0];
+  const left = inorder.indexof(rootNodeVal);
+}
