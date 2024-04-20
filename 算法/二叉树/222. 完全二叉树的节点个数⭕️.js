@@ -14,3 +14,18 @@
 输入：root = [1]
 输出：1
  */
+var countNodes = function(root) {
+    if(!root) return 0
+
+    const nodeList = [root]
+    let nodeNum = 0
+
+    while(nodeList.length) {
+        nodeNum++
+        const curNode = nodeList.shift()
+        curNode.left && nodeList.push(curNode.left)
+        curNode.right && nodeList.push(curNode.right)
+    }
+
+    return nodeNum
+};
