@@ -15,23 +15,34 @@
     this.val = x;
     this.next = null;
 }
- *  链表1: 1 --> 2 --> 3 --> 6 --> 7
- *  链表2: 4 --> 5 --> 6 --> 7
+ *  链表1: 1 --> 2 --> 3 --> 6 --> 7 --> null --> 4 --> 5 --> 6 --> 7 --> null
+ *  链表2: 4 --> 5 --> 6 --> 7 --> null --> 1 --> 2 --> 3 --> 6 --> 7 --> null
  * 
  * 让p1指针遍历完链表1后继续遍历链表2，p2指针遍历完链表2后继续遍历链表1，链表1+链表2的长度是一定的，那么在两个链表合成一条链表后，公共结点肯定在该链表的最后几位，
  * 如果p1===p2了，那么就是第一个公共结点
- * p1: 1 --> 2 --> 3 --> 6 --> 7 --> 4 --> 5 --> 6 --> 7
- * p2: 4 --> 5 --> 6 --> 7 --> 1 --> 2 --> 3 --> 6 --> 7
+ * p1: 1 --> 2 --> 3 --> 9 --> 8 --> 4 --> 5 --> 6 --> 7 --> null
+ * p2: 4 --> 5 --> 6 --> 7 --> 1 --> 2 --> 3 --> 9 --> 8 --> null
  */
 
-const p1 = {val: 1, next: {val: 2, next:null}}
-const p2 = {val: 3, next: {val: 4, next: {val: 5, next: null}}}
-function FindFirstCommonNode(pHead1, pHead2)
-{
-    // write code here
+const p1 = { val: 1, next: { val: 2, next: null } };
+const p2 = { val: 3, next: { val: 4, next: { val: 5, next: null } } };
+function FindFirstCommonNode(pHead1, pHead2) {
+  // write code here
+  if (!pHead1 || !pHead2) return null;
+
+  let p1 = pHead1;
+  let p2 = pHead2;
+
+  while (p1 || p2) {
+    if (p1 === p2) return p1;
+    p1 = !p1 ? pHead1 : p1.next;
+    p2 = !p2 ? pHead2 : p2.next;
+  }
+
+  return null;
 }
 
-console.log(FindFirstCommonNode(p1, p2))
+console.log(FindFirstCommonNode(p1, p2));
 module.exports = {
-    FindFirstCommonNode : FindFirstCommonNode
+  FindFirstCommonNode: FindFirstCommonNode,
 };

@@ -24,3 +24,25 @@
 输入：nums = [3,2,1]
 输出：[3,null,2,null,1]
  */
+function TreeNode(val, left, right) {
+  this.val = val === undefined ? 0 : val;
+  this.left = left === undefined ? null : left;
+  this.right = right === undefined ? null : right;
+}
+var constructMaximumBinaryTree = function (nums) {
+    if (!nums.length) return null
+
+    const root = Math.max(...nums)
+    const rootIndex = nums.indexOf(root)
+    const left = nums.slice(0, rootIndex)
+    const right = nums.slice(rootIndex + 1, nums.length)
+
+    const tree = new TreeNode(
+        root,
+        constructMaximumBinaryTree(left),
+        constructMaximumBinaryTree(right)
+    )
+
+    return tree
+
+};
