@@ -18,6 +18,4 @@
  * @param {number} target
  * @return {number}
  */
-var countTarget = function(scores, target) {
-
-};
+var countTarget = function (scores, target) {};

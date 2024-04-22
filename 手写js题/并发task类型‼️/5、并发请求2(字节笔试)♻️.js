@@ -120,32 +120,40 @@ class Scheduler2 {
 }
 
 class Scheduler1 {
-  constructor(limit = 2) {
-    this.limit = limit;
+  constructor() {
     this.taskList = [];
-    this.runningNum = 0;
+    this.limit = 2;
+    this.runningIndex = 0;
   }
-
-  add(promiseTask) {
+  add(func) {
     return new Promise((resolve, reject) => {
-      const task = () => {
-        return promiseTask().then(resolve, reject)
-      }
-      this.taskList.push(task);
+      this.taskList.push({
+        func,
+        resolve,
+        reject,
+      });
 
-      this.runTask()
+      if (this.taskList.length <= 2) {
+        this.runTask();
+      }
     });
   }
 
   runTask() {
-    while (this.runningNum < this.limit && this.taskList.length) {
-      const curTask = this.taskList.shift();
-      this.runningNum++;
-      curTask().finally(() => {
-        this.runningNum--;
-        this.runTask()
+    if (!this.taskList.length || this.runningIndex === this.limit) return;
+    const { func, resolve, reject } = this.taskList.shift();
+    this.runningIndex++;
+    func()
+      .then((r) => {
+        resolve(r);
+      })
+      .catch((e) => {
+        reject(e);
+      })
+      .finally(() => {
+        this.runningIndex--;
+        this.runTask();
       });
-    }
   }
 }
 
