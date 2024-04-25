@@ -1,49 +1,57 @@
 // 实现 compare(object1, object2) => bool 函数，对 object1 和 object2 做深度对比，
 // 每一个键对应的值可能为 string、number、array (每一项的值受同等约束)、object (每一个键对应的值受同等约束)，
 // 可能存在 object 或 array 递归引用，返回 true 或 false
-let cache = new Map()
+let cache = new Map();
 
 function compare(object1, object2) {
   // 补全代码
 
   // 1、类型不同
-  if (typeof object1 !== typeof object2) return false
+  if (typeof object1 !== typeof object2) return false;
 
   // 2、基础类型
   if (
-		(typeof object1 !== 'object' && typeof object2 !== 'object') || 
-		(object1 === null || object2 === null)
-	) return object1 === object2
+    (typeof object1 !== "object" && typeof object2 !== "object") ||
+    object1 === null ||
+    object2 === null
+  )
+    return object1 === object2;
 
-	// 3、长度 或者 key值的数量不同
-	if (Object.keys(object1).length !== Object.keys(object2).length) return false
+  // 3、长度 或者 key值的数量不同
+  if (Object.keys(object1).length !== Object.keys(object2).length) return false;
 
-	// 4、比较每一项
-	let res = true
-	for (let key in object1) {
-		const value1 = object1[key]
-		const value2 = object2[key]
-		if (value2 === undefined) return false
+  // 4、比较每一项
+  let res = true;
+  for (let key in object1) {
+    const value1 = object1[key];
+    const value2 = object2[key];
+    if (value2 === undefined) return false;
 
-		if (cache.has(value1) && cache.has(value2)) {
-			return cache.get(value1) === cache.get(value2)
-		}
-		if ((cache.has(value1) && !cache.has(value2)) || (!cache.has(value1) && cache.has(value2))) {
-			return false
-		}
-		
-		cache.set(value1, value1)
-		cache.set(value2, value2)
-		res = compare(value1, value2)
-		if (!res) return false
-	}
+    if (cache.has(value1) && cache.has(value2)) {
+      return cache.get(value1) === cache.get(value2);
+    }
+    if (
+      (cache.has(value1) && !cache.has(value2)) ||
+      (!cache.has(value1) && cache.has(value2))
+    ) {
+      return false;
+    }
 
-	return res
+    cache.set(value1, value1);
+    cache.set(value2, value2);
+    res = compare(value1, value2);
+    if (!res) return false;
+  }
+
+  return res;
 }
- 
-let a = {}, b = {}, c = {}, d = {};
+
+let a = {},
+  b = {},
+  c = {},
+  d = {};
 [a, b, c, d].forEach((item) => {
-  item.key1 = 'value1';
+  item.key1 = "value1";
   item.key2 = 2;
   item.key3 = [a, b, c, d];
   item.key4 = { a, b, c, d };
@@ -52,17 +60,17 @@ let a = {}, b = {}, c = {}, d = {};
   item.c = d;
   item.d = c;
 });
-console.log('#1:', compare(a, b));
-console.log('#2:', compare(c, d));
+console.log("#1:", compare(a, b));
+console.log("#2:", compare(c, d));
 [c, d].forEach((item) => {
   let key = `e_${Math.random()}`;
   let subItem = {};
   subItem[key] = item;
   item.key3.push(subItem);
 });
-console.log('#3:', compare(a, b));
-console.log('#4:', compare(c, d));
- 
+console.log("#3:", compare(a, b));
+console.log("#4:", compare(c, d));
+
 // const a = {
 // 	a: 1,
 // 	b: false,
@@ -98,7 +106,6 @@ console.log('#4:', compare(c, d));
 // }
 // console.log(compare(a, b))
 
-
 /* 输出如下: */
 /*
 #1: true
@@ -106,10 +113,6 @@ console.log('#4:', compare(c, d));
 #3: true
 #4: false
 */
-
-
-
-
 
 /*
 评分重点：
@@ -121,7 +124,7 @@ console.log('#4:', compare(c, d));
 6. 递归处理 object 和 array [ 0-1 ]
 7. 其他 [ 0-3 ]
 */
- 
+
 class Refs {
   constructor() {
     this._refs = new Map();
@@ -140,7 +143,7 @@ class Refs {
     return this._refs.has(a) && this._refs.get(a).has(b);
   }
 }
- 
+
 const TYPES = ["string", "number", "object", "array"];
 function getType(item) {
   let type = Object.prototype.toString.call(item).slice(8, -1).toLowerCase();
@@ -149,7 +152,7 @@ function getType(item) {
   }
   return type;
 }
- 
+
 function _compare(object1, object2, refs) {
   if (object1 === object2) {
     return true;
@@ -160,7 +163,7 @@ function _compare(object1, object2, refs) {
     return false;
   }
   switch (type1) {
-    case 'object':
+    case "object":
       if (refs.hasMark(object1, object2)) {
         return true;
       }
@@ -169,7 +172,7 @@ function _compare(object1, object2, refs) {
       if (compare(keys1, keys2)) {
         refs.mark(object1, object2);
         return keys1.every((key) => {
-          if (key == 'key4') {
+          if (key == "key4") {
             let result = _compare(object1[key], object2[key], refs);
             return result;
           } else {
@@ -178,7 +181,7 @@ function _compare(object1, object2, refs) {
         });
       }
       return false;
-    case 'array':
+    case "array":
       if (refs.hasMark(object1, object2)) {
         return true;
       }
@@ -186,9 +189,11 @@ function _compare(object1, object2, refs) {
         return false;
       }
       refs.mark(object1, object2);
-      return object1.every((value1, idx) => _compare(value1, object2[idx], refs));
-    case 'string':
-    case 'number':
+      return object1.every((value1, idx) =>
+        _compare(value1, object2[idx], refs)
+      );
+    case "string":
+    case "number":
       return object1 == object2;
   }
 }
@@ -197,4 +202,3 @@ function compare(object1, object2) {
   let refs = new Refs();
   return _compare(object1, object2, refs);
 }
- 
