@@ -13,17 +13,23 @@ let str1 = "$1,187,098.";
 let reg1 = /^\$(0|([1-9]\d{0,2}(,\d{3})*))(\.\d{2})?$/g;
 // console.log(reg1.test(str1))
 
-let str2 = "    iii  iii    ";
-let reg2 = /^(\s*)(\S.*\S)(\s*)$/g;
-let reg3 = /(^\s*)|(\s*$)/g;
-let a = str2.replace(reg2, ($0, $1, $2, $3) => {
-  return $2;
-});
+// 1、密码校验  需要包含大写字母、小写字母、数字、特殊字符
+const pswReg =
+  /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[~!@#$%^&*<>?,.])[\dA-Za-z~!@#$%^&*<>?,.]{8,16}$/g;
 
-let b = str2.replace(reg3, ($0, $1, $2) => {
-  return "";
-});
-console.log(b, b.length, "=====");
-
-// 1、密码校验  需要大大写字母、小写字母、数字、特殊字符，至少包含3种
 // 2、将数字10000000000，分割为10,000,000,000
+const getNewStr = (str) => {
+  const reg = /\B(?=(\d{3})+(?!\d))/g;
+  return str.replace(reg, ",");
+};
+// console.log(getNewStr("1000000000009999"));
+
+// 3、去除首位空格
+const deleteSpace = (str) => {
+  // 方案1
+  return str.replace(/^\s*(\S.*\S+)\s*$/, ($0, $1) => $1);
+
+  // 方案2
+  //   return str.replace(/^\s*|\s*$/g, "");
+};
+// console.log(deleteSpace("   LI   DAN     "));

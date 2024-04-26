@@ -1,6 +1,4 @@
-function curry(fn, ...outterArgs) {
-  
-}
+function curry(fn, ...outterArgs) {}
 
 // 用法如下：
 const add = (a, b, c, d) => a + b + c + d;
