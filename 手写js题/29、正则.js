@@ -33,3 +33,11 @@ const deleteSpace = (str) => {
   //   return str.replace(/^\s*|\s*$/g, "");
 };
 // console.log(deleteSpace("   LI   DAN     "));
+
+// 4、^匹配每一行的开头，$匹配每一行的结尾,m标识表示多行匹配，如果不加m标识，只会匹配第一行
+const everyLineReg = /www$/gm;
+
+// 5、捕获组和非捕获组
+// （）中的内容为捕获组，当有?:标识时表示（）内的内容不是一个捕获组
+// \1 \2 \3表示第几个捕获组的引用，可以直接在正则里使用
+const reg5 = /(?:www)+\.(demo)+.*\1/;
