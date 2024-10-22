@@ -3,7 +3,40 @@
  * 给定n个物品和一个容量为C的背包，物品i的重量是Wi，其价值为Vi，背包问题是如何选择入背包的物品，使得装入背包的物品的总价值最大。
  * 注意：你可以将物品的一部分装入背包，但不能重复装入。
  */
-// 略臃肿
+// 方案二(推荐)：贪心算法，因为物品可以拆开装，所以，可以按单价，优先装价高的物品
+function getBiggestPrice2(wrap, Weights, Prices) {
+  const sortedPrices = Weights.map((w, index) => {
+    return {
+      weight: w,
+      price: Prices[index],
+      unit: Prices[index] / w, // 保存的是单价
+    }
+  }).sort((a, b) => b.unit - a.unit)
+
+  let totalPrice = 0
+  let totalWeight = 0
+  for (let i = 0; i < sortedPrices.length && totalWeight <= wrap; i++) {
+    const curWeight = totalWeight + sortedPrices[i].weight
+    if (curWeight > wrap) {
+      const remianWeight = wrap - totalWeight
+      totalWeight += remianWeight
+      totalPrice += remianWeight * sortedPrices[i].unit
+    } else {
+      totalWeight = curWeight
+      totalPrice += sortedPrices[i].price
+    }
+  }
+
+  return Math.floor(totalPrice)
+}
+
+
+
+
+
+
+
+// 臃肿（比较适合不可拆分物品的背包问题）
 function getBiggestPrice(n, C, Weights, Prices){
     const matrix = []
     // 用来存储当前位置最大价值时还有多少空间没填满
